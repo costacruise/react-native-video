@@ -117,7 +117,7 @@ static NSString *const playbackRate = @"rate";
     {
         return [playerItem seekableTimeRanges].firstObject.CMTimeRangeValue;
     }
-    
+
     return (kCMTimeRangeZero);
 }
 
@@ -234,6 +234,9 @@ static NSString *const playbackRate = @"rate";
  * observer set */
 - (void)removePlayerItemObservers
 {
+  if (_playerLayer) {
+    [_playerLayer removeObserver:self forKeyPath:readyForDisplayKeyPath];
+  }
   if (_playerItemObserversSet) {
     [_playerItem removeObserver:self forKeyPath:statusKeyPath];
     [_playerItem removeObserver:self forKeyPath:playbackBufferEmptyKeyPath];
@@ -345,7 +348,7 @@ static NSString *const playbackRate = @"rate";
           } else
             orientation = @"portrait";
         }
-          
+
       if(self.onVideoLoad) {
           self.onVideoLoad(@{@"duration": [NSNumber numberWithFloat:duration],
                              @"currentTime": [NSNumber numberWithFloat:CMTimeGetSeconds(_playerItem.currentTime)],
